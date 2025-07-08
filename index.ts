@@ -21,15 +21,13 @@ app.use(express.json({ limit: "50mb" }));
 
 app.post("/extract-text", async (req: Request, res: Response) => {
   try {
-    const { imageBase64 } = req.body;
-    if (!imageBase64) {
-      res.status(400).json({ error: "No imageBase64 provided" });
+    const { image } = req.body;
+    if (!image) {
+      res.status(400).json({ error: "No image provided" });
       return;
     }
 
-    const imageBuffer = Buffer.from(imageBase64, "base64");
-
-    const { data } = await Tesseract.recognize(imageBuffer, "eng");
+    const { data } = await Tesseract.recognize(image, "eng");
 
     const rawText = data.text.trim();
     const langCode = franc(rawText);
